@@ -16,6 +16,7 @@ public class Codes {
     public static int SHOW_RESOURCE = 140;
     public static int SHOW_SUBRESOURCE = 150;
     public static int SUBRESOURCE_NOT_FOUND = 550;
+    public static int UNKNOWN_OPERATION = 570;
     public static int THX_BYE = 160;
 
 }
