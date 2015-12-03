@@ -21,8 +21,15 @@ public class Melocotron {
 
         while(true){
             Socket clientSocket = server.accept();
-            ConnectionHandler handler = new ConnectionHandler(clientSocket, resourceList, authenticator);
-            handler.start(); // this creates a new thread that will handle the connection
+
+            try {
+                ConnectionHandler handler = new ConnectionHandler(clientSocket, resourceList, authenticator);
+                handler.start();
+            } catch(IOException e){ 
+                System.err.println("Error con el socket: abortando conexión");
+                System.err.println(e.toString());
+            }
+
         }
 
     }
