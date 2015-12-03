@@ -1,5 +1,6 @@
 package melocotron.resource;
 import melocotron.resource.Resource;
+import melocotron.resource.exceptions.*;
 import java.util.HashMap;
 import java.util.ArrayList;
 
@@ -19,7 +20,18 @@ public class ResourceList {
         Get folder names in resourceListPath and 
         add them as resources to resources
     */
-    private void discoverResources(){}
+    private void discoverResources(){
+        File basedir = new File(this.resourceListPath);
+        Iterator<File> resources = iterateFiles(basedir, TrueFileFilter.TRUE, null);
+        Resource res;
+
+        for(File f: this.resources){
+            if(f.isDirectory()){
+                res = new Resource(f.getName(), f.getAbsolutePath());
+                this.resources.put(f.getName(), res);
+            }
+        }
+    }
 
     public ArrayList<String> getResourceNames(){
         ArrayList<String> resourceNames = new ArrayList<String>();
@@ -31,8 +43,28 @@ public class ResourceList {
         return resourceNames;
     }
 
-    public HashMap<String, String> accessResource(String resourceName){}
+    public ArrayList<String> getSubresourceNames(String resourceName){
+        return this.resources.get(resourceName).getSubresourceNames();
+    }
 
-    public String accessSubResource(String resourceName, String subresourceName) {}
+    public HashMap<String, String> accessResource(String resourceName){
+        Resource res = this.resources.get(resourceName);
+
+        if(res == null){
+            throw new ResourceNotFoundException(resourceName);
+        } 
+
+        return res.access();
+    }
+
+    public String accessSubresource(String resourceName, String subresourceName) throws ResourceNotFoundException {  //, SubresourceNotFoundException {
+        Resource res = this.resources.get(resourceName);
+
+        if(res == null){
+            throw new ResourceNotFoundException(resourceName);
+        } 
+
+        return res.accessSubresource(subresourceName);
+    }
 
 }

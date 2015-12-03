@@ -1,4 +1,5 @@
 package melocotron.resource;
+import java.io.*
 
 public class Subresource {
     
@@ -13,8 +14,26 @@ public class Subresource {
     /**
         Execute subresource and return its output
     */
-    public String access(){
-    
+    public String access() throws IOException {
+        String chunk = null, output = "";
+
+        Process proc = Runtime.getRuntime().exec(this.subresourcePath);
+        BufferedReader stdout = new BufferedReader(new InputStreamReader(proc.getInputStream()));
+        BufferedReader stderr = new BufferedReader(new InputStreamReader(proc.getErrorStream()));
+
+        output += "STDOUT\n";
+
+        while ((chunk = stdout.readLine()) != null) {
+            output += chunk;
+        }
+
+        output += "\nSTDERR\n";
+        
+        while ((chunk = stderr.readLine()) != null) {
+            output += chunk;
+        }
+
+        return output + "\n";
     }
 
 }
