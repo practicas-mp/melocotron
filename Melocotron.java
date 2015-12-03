@@ -1,0 +1,29 @@
+package melocotron;
+import resource.ResourceList;
+import net.ConnectionHandler;
+import melocotron.auth.Authenticator;
+
+public class Melocotron {
+    private static int PORT = 1338;
+
+    
+    public static void main(String[] args){
+        if (args.length < 1) {
+            System.err.println("Error: falta el directorio donde buscar los recursos"); 
+        } 
+
+        String resourceListPath = args[0];
+
+        ResourceList resourceList = new ResourceList(resourceListPath);
+        Authenticator authenticator = new Authenticator();
+        ServerSocket server = new ServerSocket(PORT);
+
+
+        while(true){
+            Socket clientSocket = server.accept();
+            ConnectionHandler handler = new ConnectionHandler(clientSocket, resourceList, authenticator);
+            handler.start(); // this creates a new thread that will handle the connection
+        }
+
+    }
+}
