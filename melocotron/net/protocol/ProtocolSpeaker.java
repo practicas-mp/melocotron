@@ -29,7 +29,9 @@ public class ProtocolSpeaker {
             bytesReceived.add(received);
         } while(received != '\n');
 
+		bytesReceived.remove(bytesReceived.size() - 1);
         String rawMessage = byteListToString(bytesReceived);
+		rawMessage = rawMessage.replaceAll("\n\r", "");
         return new Message(rawMessage);
     }
 

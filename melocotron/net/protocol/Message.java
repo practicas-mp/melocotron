@@ -23,12 +23,22 @@ public class Message {
     private void parseRawMessage(String rawMessage){
         int i = 0;
 
+        Boolean goodMessage = rawMessage.length() > 0;
+        System.out.println("Parsing: " + rawMessage);
 		for(i = 0; i < rawMessage.length(); i++){
-			if (Character.isDigit(rawMessage.charAt(i)) == false)
+			if (Character.isDigit(rawMessage.charAt(i)) == false){
+                goodMessage = i != 0;
 				break;
+            }
 		}
-        this.opCode = Integer.parseInt(rawMessage.substring(0, i));
-        this.body = this.unescape(rawMessage.substring(i));
+
+        if (goodMessage){   
+            this.opCode = Integer.parseInt(rawMessage.substring(0, i));
+            this.body = this.unescape(rawMessage.substring(i));
+        } else {
+            this.opCode = -100; // Unknown operation
+            this.body = "";
+        }
     }
 
     public String raw(){

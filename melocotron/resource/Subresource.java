@@ -1,7 +1,9 @@
 package melocotron.resource;
+
 import java.io.*;
 import java.util.ArrayList;
-import melocotron.resource.exceptions.*;
+import melocotron.resource.exceptions.SubresourceNotFoundException;
+import melocotron.resource.exceptions.ResourceNotFoundException;
 
 public class Subresource {
     
@@ -19,22 +21,32 @@ public class Subresource {
     public String access(){
         String chunk = null, output = "";
 
-        Process proc = Runtime.getRuntime().exec(this.subresourcePath);
+		Process proc;
+		try {
+        	proc = Runtime.getRuntime().exec(this.subresourcePath);
+		} catch(IOException e){
+			System.err.println("Error ejecutando archivo");
+			System.err.println(e.toString());
+			return "error ejecutando";
+		}
         BufferedReader stdout = new BufferedReader(new InputStreamReader(proc.getInputStream()));
         BufferedReader stderr = new BufferedReader(new InputStreamReader(proc.getErrorStream()));
 
         output += "STDOUT\n";
 
-        while ((chunk = stdout.readLine()) != null) {
-            output += chunk;
-        }
+		try {
+			while ((chunk = stdout.readLine()) != null) {
+				output += chunk;
+			}
 
-        output += "\nSTDERR\n";
-        
-        while ((chunk = stderr.readLine()) != null) {
-            output += chunk;
-        }
-
+			output += "\nSTDERR\n";
+			
+			while ((chunk = stderr.readLine()) != null) {
+				output += chunk;
+			}
+		} catch(IOException e){
+			System.err.println("Error con la salida del archivo");
+		}
         return output + "\n";
     }
 

@@ -6,6 +6,9 @@ JAVASRCS:=$(wildcard **/*.java)
 all: $(JAVASRCS)
 	javac -g $(JAVASRCS)
 
+clean:  
+	rm **/*.class    
+
 recomp:
 	make clean	
 	make comp
