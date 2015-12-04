@@ -54,6 +54,7 @@ public class ResourceList {
 
     public ResourceList(String resourceListPath){
         this.resourceListPath = resourceListPath;
+        this.resources = new HashMap<String, Resource>();
         this.discoverResources();
     }
 
