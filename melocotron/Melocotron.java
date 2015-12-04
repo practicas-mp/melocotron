@@ -1,6 +1,6 @@
 package melocotron;
-import resource.ResourceList;
-import net.ConnectionHandler;
+import melocotron.resource.ResourceList;
+import melocotron.net.ConnectionHandler;
 import melocotron.auth.Authenticator;
 
 public class Melocotron {
