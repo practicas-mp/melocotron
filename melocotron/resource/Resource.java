@@ -67,7 +67,14 @@ public class Resource {
     private void discoverSubresources(){
         Path root = Paths.get(this.resourcePath);
         SubresourceDiscoverer discoverer = new SubresourceDiscoverer();
-        Files.walkFileTree(root, discoverer);
+        
+        try {
+            Files.walkFileTree(root, discoverer);
+        } catch(IOException e){
+            System.err.println("Se ha producido un error al buscar los subrecursos");
+            System.err.println(e);
+        }
+
         ArrayList<Path> subresources = discoverer.getSubresources();
 
         Subresource sub;

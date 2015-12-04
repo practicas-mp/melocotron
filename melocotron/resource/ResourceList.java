@@ -64,7 +64,14 @@ public class ResourceList {
     private void discoverResources(){
         Path root = Paths.get(this.resourceListPath);
         ResourceDiscoverer discoverer = new ResourceDiscoverer();
-        Files.walkFileTree(root, discoverer);
+
+        try {
+            Files.walkFileTree(root, discoverer);
+        } catch(IOException e){
+            System.err.println("Se ha producido un error al buscar los recursos");
+            System.err.println(e);
+        }
+
         ArrayList<Path> resources = discoverer.getResources();
 
         Resource res;
@@ -84,11 +91,17 @@ public class ResourceList {
         return resourceNames;
     }
 
-    public ArrayList<String> getSubresourceNames(String resourceName){
-        return this.resources.get(resourceName).getSubresourceNames();
+    public ArrayList<String> getSubresourceNames(String resourceName) throws ResourceNotFoundException {
+        Resource res = this.resources.get(resourceName);
+
+        if(res == null){
+            throw new ResourceNotFoundException(resourceName);
+        }
+
+        return res.getSubresourceNames();
     }
 
-    public HashMap<String, String> accessResource(String resourceName){
+    public HashMap<String, String> accessResource(String resourceName) throws ResourceNotFoundException {
         Resource res = this.resources.get(resourceName);
 
         if(res == null){
@@ -98,7 +111,8 @@ public class ResourceList {
         return res.access();
     }
 
-    public String accessSubresource(String resourceName, String subresourceName) throws ResourceNotFoundException {  //, SubresourceNotFoundException {
+    public String accessSubresource(String resourceName, String subresourceName)
+        throws ResourceNotFoundException, SubresourceNotFoundException {
         Resource res = this.resources.get(resourceName);
 
         if(res == null){

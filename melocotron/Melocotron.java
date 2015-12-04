@@ -1,10 +1,10 @@
 package melocotron;
-import melocotron.resource.ResourceList;
-import melocotron.net.ConnectionHandler;
-import melocotron.auth.Authenticator;
+import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.io.IOException;
+import melocotron.auth.Authenticator;
+import melocotron.net.ConnectionHandler;
+import melocotron.resource.ResourceList;
 
 public class Melocotron {
     private static int PORT = 1338;

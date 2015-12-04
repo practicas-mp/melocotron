@@ -16,7 +16,7 @@ public class Subresource {
     /**
         Execute subresource and return its output
     */
-    public String access() throws IOException {
+    public String access(){
         String chunk = null, output = "";
 
         Process proc = Runtime.getRuntime().exec(this.subresourcePath);

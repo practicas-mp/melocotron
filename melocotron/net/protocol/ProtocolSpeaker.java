@@ -39,7 +39,7 @@ public class ProtocolSpeaker {
     }
 
 
-    public void close(){
+    public void close() throws IOException {
         socket.close(); 
     }
 
