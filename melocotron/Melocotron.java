@@ -2,6 +2,9 @@ package melocotron;
 import melocotron.resource.ResourceList;
 import melocotron.net.ConnectionHandler;
 import melocotron.auth.Authenticator;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.io.IOException;
 
 public class Melocotron {
     private static int PORT = 1338;
@@ -16,13 +19,18 @@ public class Melocotron {
 
         ResourceList resourceList = new ResourceList(resourceListPath);
         Authenticator authenticator = new Authenticator();
-        ServerSocket server = new ServerSocket(PORT);
-
+		ServerSocket server;
+		try {
+			server = new ServerSocket(PORT);
+		} catch (IOException e) {
+			System.err.println("Hubo un error bindeando");
+			System.err.println(e.toString());
+			return;
+		}
 
         while(true){
-            Socket clientSocket = server.accept();
-
             try {
+				Socket clientSocket = server.accept();
                 ConnectionHandler handler = new ConnectionHandler(clientSocket, resourceList, authenticator);
                 handler.start();
             } catch(IOException e){ 

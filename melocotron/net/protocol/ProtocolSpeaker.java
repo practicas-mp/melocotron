@@ -1,9 +1,12 @@
 package melocotron.net.protocol;
 import melocotron.net.protocol.Message;
+import melocotron.auth.Authenticator;
 import java.util.List;
 import java.util.ArrayList;
 import java.net.Socket;
 import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 
 public class ProtocolSpeaker {
     private Socket socket;
@@ -17,12 +20,14 @@ public class ProtocolSpeaker {
     }
 
     public Message receive() throws IOException {
-        ArrayList<byte> bytesReceived = new ArrayList<byte>();
+        ArrayList<Byte> bytesReceived = new ArrayList<Byte>();
+
+		Byte received;
 
         do {
-            byte received = input.readByte(); 
+            received = input.readByte(); 
             bytesReceived.add(received);
-        } while(received != '\n')
+        } while(received != '\n');
 
         String rawMessage = byteListToString(bytesReceived);
         return new Message(rawMessage);
@@ -38,9 +43,11 @@ public class ProtocolSpeaker {
         socket.close(); 
     }
 
-    private String byteListToString(List<byte> bytes){
+    private String byteListToString(List<Byte> bytes){
         byte[] bytearray = new byte[bytes.size()];
-        bytes.toArray(bytearray);
+		for(int i = 0; i < bytes.size(); i++){
+			bytearray[i] = bytes.get(i);
+		}
         return new String(bytearray);
     }
 }

@@ -2,10 +2,12 @@ package melocotron.net;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.net.Socket;
+import java.io.IOException;
 import melocotron.auth.Authenticator;
 import melocotron.net.protocol.ProtocolSpeaker;
 import melocotron.net.protocol.Message;
-import melocotron.net.protocol.Codes.*;
+import static melocotron.net.protocol.Codes.*;
 import melocotron.resource.ResourceList;
 import melocotron.resource.Resource;
 import melocotron.resource.exceptions.ResourceNotFoundException;
@@ -114,7 +116,7 @@ public class ConnectionHandler implements Runnable {
     }
 
     private Message handleListResources(Message input){ 
-        ArrayList<String> resourceNames = resourceList.getResourceNames();
+        ArrayList<String> resourceNames = resources.getResourceNames();
 
         Message output = new Message(LIST_RESOURCES, join(resourceNames));
 
@@ -128,7 +130,7 @@ public class ConnectionHandler implements Runnable {
         Message output;
 
         try {
-            ArrayList<String> subresourceNames = resourceList.getSubresourceNames(resourceName);
+            ArrayList<String> subresourceNames = resources.getSubresourceNames(resourceName);
             String flatSubresourceNames = join(subresourceNames);
             output = new Message(LIST_SUBRESOURCES, flatSubresourceNames);
         } catch(ResourceNotFoundException e){
@@ -145,7 +147,7 @@ public class ConnectionHandler implements Runnable {
         String resourceName = input.getBody();
 
         try {
-            HashMap<String, String> subresourceResults = resourceList.accessResource(resourceName);
+            HashMap<String, String> subresourceResults = resources.accessResource(resourceName);
 
             ArrayList<String> serializedResults = new ArrayList<String>();
 
@@ -156,7 +158,7 @@ public class ConnectionHandler implements Runnable {
             output = new Message(SHOW_RESOURCE, join(serializedResults));
 
         } catch(ResourceNotFoundException e) {
-            output = new Message(RESOURCE_NOT_FOUND, resourceNAme);
+            output = new Message(RESOURCE_NOT_FOUND, resourceName);
         }
 
 
@@ -176,7 +178,7 @@ public class ConnectionHandler implements Runnable {
         String subresourceName = data[1];
 
         try {
-            String result = resourceList.accessSubresource(resourceName, subresourceName);
+            String result = resources.accessSubresource(resourceName, subresourceName);
             output = new Message(SHOW_SUBRESOURCE, result);
         } catch (ResourceNotFoundException e) {
             output = new Message(RESOURCE_NOT_FOUND, resourceName);
@@ -200,7 +202,7 @@ public class ConnectionHandler implements Runnable {
         if (names.size() > 0){
             StringBuilder flatList = new StringBuilder();
 
-            flatList.append(names[0]);
+            flatList.append(names.get(0));
 
             for(int i = 1; i < names.size(); i++){
                 flatList.append(":" + names.get(i));

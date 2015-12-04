@@ -7,7 +7,7 @@ public class Message {
     
 
     public Message(String rawMessage){
-        this.parseRawMessage();
+        this.parseRawMessage(rawMessage);
     }
 
     public Message(int opCode, String body){
@@ -15,11 +15,18 @@ public class Message {
         this.body = body;
     }
 
+	public Message(int opCode){
+		this.opCode = opCode;
+		this.body = "";
+	}
+
     private void parseRawMessage(String rawMessage){
-        int i = -1;
+        int i = 0;
 
-        while(rawMessage.charAt(++i).isDigit());
-
+		for(i = 0; i < rawMessage.length(); i++){
+			if (Character.isDigit(rawMessage.charAt(i)) == false)
+				break;
+		}
         this.opCode = Integer.parseInt(rawMessage.substring(0, i));
         this.body = this.unescape(rawMessage.substring(i));
     }

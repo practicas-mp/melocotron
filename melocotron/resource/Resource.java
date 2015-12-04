@@ -106,7 +106,7 @@ public class Resource {
         Subresource sub = this.subresources.get(subresourceName);
 
         if(sub == null){
-            throw new SubresourceNotFoundException(subresourceName);
+            throw new SubresourceNotFoundException(this.name, subresourceName);
         }
 
         return sub.access();
