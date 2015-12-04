@@ -17,6 +17,6 @@ public class Codes {
     public static final int SHOW_SUBRESOURCE = 150;
     public static final int SUBRESOURCE_NOT_FOUND = 550;
     public static final int UNKNOWN_OPERATION = 570;
-    public static final int THX_BYE = 160;
+    public static final int KTHX_BYE = 160;
 
 }
