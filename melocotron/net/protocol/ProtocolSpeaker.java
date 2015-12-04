@@ -36,7 +36,7 @@ public class ProtocolSpeaker {
     }
 
     public void send(Message message) throws IOException { 
-        String rawMessage = message.raw(); 
+        String rawMessage = message.raw() + "\n"; 
         output.writeChars(rawMessage);
     }
 
