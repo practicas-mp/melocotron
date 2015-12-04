@@ -6,7 +6,7 @@ public class SubresourceNotFoundException extends Exception {
 
     public SubresourceNotFoundException(String resourceName, String subresourceName) {
         this.resourceName = resourceName;
-        this.subresourceNAme = subresourceName;
+        this.subresourceName = subresourceName;
     }
 
 }
