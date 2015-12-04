@@ -105,7 +105,6 @@ public class ConnectionHandler implements Runnable {
 
         String username = credentials[0];
         String password = credentials[1];
-		System.out.println("Trying to login: " + username + ":" + password);
 
         Message output;
 

@@ -80,7 +80,6 @@ public class Resource {
 
         Subresource sub;
         for(Path p: subresources){
-			System.out.println(p);
             sub = new Subresource(p.getFileName().toString(), p.toString());
             this.subresources.put(p.getFileName().toString(), sub);
         }

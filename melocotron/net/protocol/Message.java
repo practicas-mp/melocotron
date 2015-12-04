@@ -24,7 +24,6 @@ public class Message {
         int i = 0;
 
         Boolean goodMessage = rawMessage.length() > 0;
-        System.out.println("Parsing: " + rawMessage);
 		for(i = 0; i < rawMessage.length(); i++){
 			if (Character.isDigit(rawMessage.charAt(i)) == false){
                 goodMessage = i != 0;

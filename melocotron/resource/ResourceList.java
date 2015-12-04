@@ -17,14 +17,12 @@ class ResourceDiscoverer extends SimpleFileVisitor<Path> {
     Boolean first = true;
 
     public ResourceDiscoverer(){
-        System.out.println("Inicializando discoverer");
         this.resources = new ArrayList<Path>();
     }
 
     @Override
     public FileVisitResult visitFile(Path file, BasicFileAttributes attr) {
         if (attr.isDirectory()){
-            System.out.println("A: " + file.toString());
             this.resources.add(file.toAbsolutePath());
         }
 
