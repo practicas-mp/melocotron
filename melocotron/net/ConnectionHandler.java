@@ -87,7 +87,11 @@ public class ConnectionHandler implements Runnable {
         
         }
 
-        protocolSpeaker.close();
+        try {
+            protocolSpeaker.close();
+        } catch(IOException e){
+            System.err.println("Error cerrando el socket");
+        }
 
     }
 
