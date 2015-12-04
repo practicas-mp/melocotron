@@ -14,14 +14,17 @@ import static java.nio.file.FileVisitResult.*;
 class ResourceDiscoverer extends SimpleFileVisitor<Path> {
 
     private ArrayList<Path> resources;
+    Boolean first = true;
 
     public ResourceDiscoverer(){
+        System.out.println("Inicializando discoverer");
         this.resources = new ArrayList<Path>();
     }
 
     @Override
     public FileVisitResult visitFile(Path file, BasicFileAttributes attr) {
         if (attr.isDirectory()){
+            System.out.println("A: " + file.toString());
             this.resources.add(file.toAbsolutePath());
         }
 
@@ -30,7 +33,13 @@ class ResourceDiscoverer extends SimpleFileVisitor<Path> {
 
     @Override
     public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attr){
-        return SKIP_SUBTREE;
+        if (first == true){
+            first = false;
+            return CONTINUE;
+        } else {
+            this.resources.add(dir.toAbsolutePath());
+            return SKIP_SUBTREE;
+        }
     }
 
     @Override
@@ -65,7 +74,6 @@ public class ResourceList {
     private void discoverResources(){
         Path root = Paths.get(this.resourceListPath);
         ResourceDiscoverer discoverer = new ResourceDiscoverer();
-
         try {
             Files.walkFileTree(root, discoverer);
         } catch(IOException e){

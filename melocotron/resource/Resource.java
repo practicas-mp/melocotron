@@ -56,6 +56,7 @@ public class Resource {
     public Resource(String name, String resourcePath){
         this.name = name;
         this.resourcePath = resourcePath;
+		this.subresources = new HashMap<String, Subresource>();
 
         this.discoverSubresources();
     }
@@ -79,6 +80,7 @@ public class Resource {
 
         Subresource sub;
         for(Path p: subresources){
+			System.out.println(p);
             sub = new Subresource(p.getFileName().toString(), p.toString());
             this.subresources.put(p.getFileName().toString(), sub);
         }
