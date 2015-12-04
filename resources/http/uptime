@@ -1,1 +1,0 @@
-ps -eo comm,etime | grep httpd
