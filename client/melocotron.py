@@ -13,7 +13,7 @@ def main():
     print client.auth("bbb", "ccc")
     print client.list_resources()
 
-    print client.access_resource('lol')
+    print client.access_resource('http')
 
 if __name__ == '__main__':
     main()
