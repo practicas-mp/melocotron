@@ -1,10 +1,49 @@
 package melocotron.resource;
-import java.util.HashMap;
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.*;
+import java.nio.file.attribute.*;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.HashMap;
 import melocotron.resource.Subresource;
 import melocotron.resource.exceptions.*;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.filefilter.TrueFileFilter;
+import static java.nio.file.FileVisitResult.*;
+
+
+class SubresourceDiscoverer extends SimpleFileVisitor<Path> {
+
+    private ArrayList<Path> subresources;
+
+    public SubresourceDiscoverer(){
+        this.subresources = new ArrayList<Path>();
+    }
+
+    @Override
+    public FileVisitResult visitFile(Path file, BasicFileAttributes attr) {
+        if (attr.isRegularFile() && file.toFile().canExecute()){
+            this.subresources.add(file.toAbsolutePath());
+        }
+
+        return CONTINUE;
+    }
+
+    @Override
+    public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attr){
+        return CONTINUE;
+    }
+
+    @Override
+    public FileVisitResult visitFileFailed(Path file, IOException exc) {
+        System.err.println(exc);
+        return CONTINUE;
+    }
+
+    public ArrayList<Path> getSubresources(){
+        return this.subresources;
+    }
+}
+
 
 public class Resource {
     
@@ -26,22 +65,22 @@ public class Resource {
         subResources arrayList
     */
     private void discoverSubresources(){
-        File basedir = new File(this.resourcePath);
-        Iterator<File> subresources = iterateFiles(basedir, TrueFileFilter.TRUE, TrueFileFilter.TRUE);
-        Subresource sub;
+        Path root = Paths.get(this.resourcePath);
+        SubresourceDiscoverer discoverer = new SubresourceDiscoverer();
+        Files.walkFileTree(root, discoverer);
+        ArrayList<Path> subresources = discoverer.getSubresources();
 
-        for(File f: this.subresources){
-            if(f.canExecute()){
-                sub = new Subresource(f.getName(), f.getAbsolutePath());
-                this.subresources.put(f.getName(), sub);
-            }
+        Subresource sub;
+        for(Path p: subresources){
+            sub = new Subresource(p.getFileName().toString(), p.toString());
+            this.subresources.put(p.getFileName().toString(), sub);
         }
     }
 
     public ArrayList<String> getSubresourceNames(){
         ArrayList<String> subresourceNames = new ArrayList<String>();
 
-        for(String subresourceName: thus.subresources.keySet()){
+        for(String subresourceName: this.subresources.keySet()){
             subresourceNames.add(subresourceName);
         }
 
@@ -64,7 +103,7 @@ public class Resource {
 
 
     public String accessSubresource(String subresourceName) throws SubresourceNotFoundException {
-        Subresource sub = this.subresources.get(subresourceName)
+        Subresource sub = this.subresources.get(subresourceName);
 
         if(sub == null){
             throw new SubresourceNotFoundException(subresourceName);
